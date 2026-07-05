@@ -1,0 +1,218 @@
+@import "tailwindcss";
+
+:root {
+  --bg-base: #f7eedd;
+  --bg-secondary: #f3ebda;
+  --text-primary: #170e1b;
+  --text-primary-hover: #251632;
+  --accent-gold: #b8892e;
+  --accent-gold-strong: #9c6f1e;
+  --footer-bg: #170e1b;
+  --footer-text: #f7eedd;
+
+  --flavor-classic: #8b6f47;
+  --flavor-pudina: #4a6b3a;
+  --flavor-chatmasala: #4a3220;
+  --flavor-periperi: #6b2130;
+  --flavor-turmeric: #c89b3c;
+}
+
+@theme inline {
+  --color-bg-base: var(--bg-base);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-text-primary: var(--text-primary);
+  --color-text-primary-hover: var(--text-primary-hover);
+  --color-accent-gold: var(--accent-gold);
+  --color-accent-gold-strong: var(--accent-gold-strong);
+  --color-footer-bg: var(--footer-bg);
+  --color-footer-text: var(--footer-text);
+
+  --color-flavor-classic: var(--flavor-classic);
+  --color-flavor-pudina: var(--flavor-pudina);
+  --color-flavor-chatmasala: var(--flavor-chatmasala);
+  --color-flavor-periperi: var(--flavor-periperi);
+  --color-flavor-turmeric: var(--flavor-turmeric);
+
+  --font-display: var(--font-playfair);
+  --font-body: var(--font-manrope);
+}
+
+* {
+  scrollbar-color: var(--accent-gold) var(--bg-secondary);
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-gold);
+  border-radius: 999px;
+  border: 2px solid var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-gold-strong);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-manrope), sans-serif;
+  position: relative;
+}
+
+h1,
+h2,
+h3,
+h4,
+.font-display {
+  font-family: var(--font-playfair), serif;
+}
+
+.eyebrow {
+  font-family: var(--font-manrope), sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-variant: small-caps;
+  color: var(--accent-gold);
+  font-weight: 600;
+}
+
+/* Subtle premium print-like grain texture over the whole page */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0.03;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-repeat: repeat;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.custom-cursor-active,
+.custom-cursor-active * {
+  cursor: none !important;
+}
+
+/* Slow idle rotation + breathing pulse for the makhana cursor */
+@keyframes cursor-idle-spin {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.05);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+.cursor-idle-spin {
+  animation: cursor-idle-spin 9s ease-in-out infinite;
+}
+
+/* Barely-perceptible idle zoom on product photography */
+@keyframes kenburns {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.045);
+  }
+}
+
+.animate-kenburns {
+  animation: kenburns 10s ease-in-out infinite;
+}
+
+/* Slow, soft glow pulse for the primary hero CTA */
+@keyframes cta-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(184, 137, 46, 0);
+  }
+  50% {
+    box-shadow: 0 0 18px 3px rgba(184, 137, 46, 0.35);
+  }
+}
+
+.animate-cta-glow {
+  animation: cta-glow 3.5s ease-in-out infinite;
+}
+
+/* Per-flavor idle-pulsing border glow on product cards — runs continuously
+   and simultaneously on every card in a grid, so it animates opacity (a
+   compositor-only property) on a dedicated layer rather than animating
+   box-shadow itself every frame (forces a repaint per card per frame,
+   the kind of thing that adds up to scroll jank with 5-6 cards on screen).
+   The layer sits behind the card (not inside its overflow-hidden box) so
+   the glow can still spill outward past the card's rounded border. */
+@keyframes card-idle-glow-pulse {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.card-flavor-glow-layer {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: 0 0 14px 1px var(--card-glow-color, transparent);
+  opacity: 0;
+  animation: card-idle-glow-pulse 2.75s ease-in-out infinite;
+  will-change: opacity;
+}
+
+.group:hover .card-flavor-glow-layer {
+  box-shadow: 0 0 28px 4px var(--card-glow-color, transparent);
+}
+
+/* Toggled on <body> while the cart drawer (or another overlay reusing the
+   same convention) is open — freezes the site's continuous CSS-driven
+   ambient animations so they aren't competing for frame budget with, e.g.,
+   typing in the checkout form behind the drawer. */
+.overlay-open .cursor-idle-spin,
+.overlay-open .animate-kenburns,
+.overlay-open .animate-cta-glow,
+.overlay-open .card-flavor-glow-layer {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
