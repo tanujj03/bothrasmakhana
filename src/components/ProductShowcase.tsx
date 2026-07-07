@@ -15,7 +15,10 @@ export default function ProductShowcase() {
           className="mb-12"
         />
 
-        <RevealGroup className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <RevealGroup
+          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          immediate
+        >
           {PRODUCTS.map((product, i) => (
             <RevealItem key={product.id}>
               <ProductCard product={product} priority={i < 3} />

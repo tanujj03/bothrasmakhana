@@ -41,17 +41,28 @@ export function RevealGroup({
   children,
   className = "",
   stagger = 0.12,
+  immediate = false,
 }: {
   children: React.ReactNode;
   className?: string;
   stagger?: number;
+  // For a grid that sits high enough on the page that it's often already
+  // partially below the fold on mobile (e.g. right after a full-height
+  // hero): `whileInView`'s viewport check needs 20% of the grid actually
+  // scrolled into view before it fires, which reads as a stuck blank gap
+  // rather than a reveal animation. `immediate` swaps the trigger to
+  // `animate` so it plays once on mount instead, like the hero's own
+  // entrance animations.
+  immediate?: boolean;
 }) {
+  const trigger = immediate
+    ? { animate: "visible" }
+    : { whileInView: "visible", viewport: { once: true, amount: 0.2 } };
   return (
     <motion.div
       className={className}
       initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.2 }}
+      {...trigger}
       transition={{ staggerChildren: stagger }}
     >
       {children}
