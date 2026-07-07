@@ -61,7 +61,7 @@ export default function Testimonials() {
                   {t.quote}
                 </p>
                 <div className="mt-5 flex items-center justify-between">
-                  <span className="font-body text-sm font-semibold text-text-primary">
+                  <span className="font-body text-sm font-semibold text-flavor-periperi">
                     {t.name}
                   </span>
                   <div className="flex gap-0.5" role="img" aria-label={`${t.rating} out of 5 stars`}>
