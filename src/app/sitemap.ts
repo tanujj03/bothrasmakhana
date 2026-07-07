@@ -8,6 +8,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/about", priority: 0.6, changeFrequency: "monthly" },
     { path: "/contact", priority: 0.6, changeFrequency: "monthly" },
     { path: "/help", priority: 0.5, changeFrequency: "monthly" },
+    { path: "/terms-and-conditions", priority: 0.3, changeFrequency: "yearly" },
+    { path: "/privacy-policy", priority: 0.3, changeFrequency: "yearly" },
+    { path: "/refund-and-cancellation-policy", priority: 0.3, changeFrequency: "yearly" },
+    { path: "/shipping-policy", priority: 0.3, changeFrequency: "yearly" },
+    { path: "/cookie-policy", priority: 0.3, changeFrequency: "yearly" },
+    { path: "/disclaimer", priority: 0.3, changeFrequency: "yearly" },
   ];
 
   return routes.map((route) => ({

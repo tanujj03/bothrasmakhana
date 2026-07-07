@@ -1,10 +1,11 @@
 import SectionHeading from "./SectionHeading";
 import Accordion from "./Accordion";
+import { ESTIMATED_DELIVERY_WINDOW } from "@/lib/constants";
 
 const FAQS = [
   {
     q: "How long does delivery take?",
-    a: "Most orders across India are delivered within 3-5 business days of dispatch. You'll get your tracking details over WhatsApp as soon as your pouch ships.",
+    a: `Most orders across India are delivered within ${ESTIMATED_DELIVERY_WINDOW} of dispatch. You'll get your tracking details over WhatsApp as soon as your pouch ships.`,
   },
   {
     q: "What is your return/refund policy?",

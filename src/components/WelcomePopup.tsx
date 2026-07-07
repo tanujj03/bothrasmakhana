@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import Logo from "./Logo";
 import { LAUNCH_OFFER_TEXT, PRICING, DEFAULT_SIZE } from "@/lib/constants";
+import { useUIStore } from "@/lib/uiStore";
 
 const SHOW_DELAY = 1800;
 
@@ -85,6 +86,7 @@ export default function WelcomePopup() {
   const [reduceMotion, setReduceMotion] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const setWelcomePopupOpen = useUIStore((state) => state.setWelcomePopupOpen);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time client-only feature detection, no re-render loop
@@ -96,6 +98,13 @@ export default function WelcomePopup() {
     }, SHOW_DELAY);
     return () => clearTimeout(timer);
   }, []);
+
+  // Lets CookieConsentBanner fully hide itself while this popup is open,
+  // instead of the two fixed-position overlays fighting over z-index.
+  useEffect(() => {
+    setWelcomePopupOpen(show);
+    return () => setWelcomePopupOpen(false);
+  }, [show, setWelcomePopupOpen]);
 
   const close = () => setShow(false);
 

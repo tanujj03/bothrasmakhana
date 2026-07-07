@@ -19,6 +19,7 @@ const CartDrawer = dynamic(() => import("@/components/CartDrawer"));
 const StickyCartBar = dynamic(() => import("@/components/StickyCartBar"));
 const WelcomePopup = dynamic(() => import("@/components/WelcomePopup"));
 const BackToTop = dynamic(() => import("@/components/BackToTop"));
+const CookieConsentBanner = dynamic(() => import("@/components/CookieConsentBanner"));
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -80,6 +81,7 @@ export default function RootLayout({
         <WelcomePopup />
         <FloatingContactButtons />
         <BackToTop />
+        <CookieConsentBanner />
       </body>
     </html>
   );

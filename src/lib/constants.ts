@@ -22,3 +22,16 @@ export const PRICING: Record<SizeKey, { mrp: number; offer: number }> = {
 
 export const LAUNCH_OFFER_TEXT =
   "Launch Offer — Valid for First 100 Customers Only";
+
+// Legal/compliance placeholders — registration is in progress. Replace both
+// with the actual numbers as soon as they're issued; every legal page reads
+// from here so there's a single place to update.
+export const FSSAI_LICENSE_NO = "[FSSAI License No. — to be updated]";
+export const GST_NO = "[GST No. — to be updated]";
+
+export const LEGAL_ENTITY_NAME = "BOTHRA'S SNACKS";
+export const LEGAL_LAST_UPDATED = "July 8, 2026";
+
+// ASSUMPTION: confirm this against actual courier SLA. FAQ.tsx imports this
+// constant too, so updating it here is the only place needed.
+export const ESTIMATED_DELIVERY_WINDOW = "3-7 business days";

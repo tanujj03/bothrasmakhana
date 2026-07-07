@@ -40,7 +40,7 @@ export default function Footer() {
   return (
     <footer className="bg-footer-bg text-footer-text">
       <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8">
-        <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-4">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2.5">
               <Logo size={44} />
@@ -103,6 +103,28 @@ export default function Footer() {
               </svg>
               {CONTACT_EMAIL}
             </a>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <h3 className="eyebrow text-xs">Policies</h3>
+            <Link href="/terms-and-conditions" className="text-sm text-footer-text/80 transition-colors duration-200 ease-in-out hover:text-accent-gold">
+              Terms &amp; Conditions
+            </Link>
+            <Link href="/privacy-policy" className="text-sm text-footer-text/80 transition-colors duration-200 ease-in-out hover:text-accent-gold">
+              Privacy Policy
+            </Link>
+            <Link href="/refund-and-cancellation-policy" className="text-sm text-footer-text/80 transition-colors duration-200 ease-in-out hover:text-accent-gold">
+              Refund &amp; Cancellation
+            </Link>
+            <Link href="/shipping-policy" className="text-sm text-footer-text/80 transition-colors duration-200 ease-in-out hover:text-accent-gold">
+              Shipping Policy
+            </Link>
+            <Link href="/cookie-policy" className="text-sm text-footer-text/80 transition-colors duration-200 ease-in-out hover:text-accent-gold">
+              Cookie Policy
+            </Link>
+            <Link href="/disclaimer" className="text-sm text-footer-text/80 transition-colors duration-200 ease-in-out hover:text-accent-gold">
+              Disclaimer
+            </Link>
           </div>
 
           <div className="flex flex-col gap-3">
