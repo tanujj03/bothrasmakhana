@@ -38,7 +38,7 @@ function InstagramButton({ className = "" }: { className?: string }) {
         <circle cx="12" cy="12" r="4" />
         <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
       </svg>
-      Chat with us on Instagram
+      Message us on Instagram
     </a>
   );
 }
@@ -151,7 +151,7 @@ export default function HelpPage() {
         </Reveal>
 
         <Reveal delay={0.15} className="mt-12 flex justify-center">
-          <WhatsAppButton />
+          <InstagramButton />
         </Reveal>
       </div>
     </section>
