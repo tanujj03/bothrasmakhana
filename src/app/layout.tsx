@@ -32,7 +32,7 @@ const manrope = Manrope({
   weight: ["400", "500", "600", "700"],
 });
 
-const SITE_TITLE = "BOTHRA'S SNACK'S MAKHANA | Not Just a Snack. A Statement.";
+const SITE_TITLE = "BOTHRA'S SNACKS MAKHANA | Not Just a Snack. A Statement.";
 const SITE_DESCRIPTION =
   "Premium roasted makhana (fox nuts) by Jainam Bothra. Low calorie, protein rich, gluten free, roasted not fried. Not Just a Snack. A Statement.";
 
@@ -44,8 +44,8 @@ export const metadata: Metadata = {
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
     url: SITE_URL,
-    siteName: "BOTHRA'S SNACK'S MAKHANA",
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "BOTHRA'S SNACK'S Makhana — Classic Roasted pouch" }],
+    siteName: "BOTHRA'S SNACKS MAKHANA",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "BOTHRA'S SNACKS Makhana — Classic Roasted pouch" }],
     locale: "en_IN",
     type: "website",
   },

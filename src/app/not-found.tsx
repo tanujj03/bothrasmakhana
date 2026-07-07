@@ -3,9 +3,9 @@ import Link from "next/link";
 import Logo from "@/components/Logo";
 
 export const metadata: Metadata = {
-  title: "Page Not Found | BOTHRA'S SNACK'S MAKHANA",
+  title: "Page Not Found | BOTHRA'S SNACKS MAKHANA",
   description:
-    "The page you're looking for doesn't exist. Head back home to shop BOTHRA'S SNACK'S Makhana.",
+    "The page you're looking for doesn't exist. Head back home to shop BOTHRA'S SNACKS Makhana.",
 };
 
 export default function NotFound() {

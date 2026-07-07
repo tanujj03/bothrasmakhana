@@ -9,7 +9,7 @@ export default function BrandStory() {
           <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-t-full rounded-b-xl shadow-2xl ring-1 ring-black/5">
             <Image
               src="/products/owner.png"
-              alt="Jainam Bothra, founder of BOTHRA'S SNACK'S Makhana"
+              alt="Jainam Bothra, founder of BOTHRA'S SNACKS Makhana"
               fill
               className="object-cover"
               sizes="(max-width: 1024px) 90vw, 400px"
@@ -23,7 +23,7 @@ export default function BrandStory() {
             Founded by Jainam Bothra
           </h2>
           <p className="mt-5 text-base leading-relaxed text-text-primary/70">
-            BOTHRA&apos;S SNACK&apos;S MAKHANA was born from a simple belief — that
+            BOTHRA&apos;S SNACKS MAKHANA was born from a simple belief — that
             snacking shouldn&apos;t be a compromise. Every batch is roasted,
             never fried, preserving the natural crunch and nutrition of
             premium fox nuts without a drop of excess oil.

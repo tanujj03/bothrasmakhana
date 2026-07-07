@@ -81,12 +81,12 @@ export default function Navbar() {
         }`}
       >
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 sm:px-8">
-          <Link href="/" className="flex items-center gap-3" aria-label="BOTHRA'S SNACK'S Makhana home">
+          <Link href="/" className="flex items-center gap-3" aria-label="BOTHRA'S SNACKS Makhana home">
             <Logo size={62} priority />
             <span
               className={`font-display text-xl font-semibold tracking-wide ${textColorClass}`}
             >
-              BOTHRA&apos;S SNACK&apos;S
+              BOTHRA&apos;S SNACKS
             </span>
           </Link>
 

@@ -12,7 +12,7 @@ export default function Logo({
   return (
     <Image
       src="/products/logo.png"
-      alt="BOTHRA'S SNACK'S Makhana"
+      alt="BOTHRA'S SNACKS Makhana"
       width={size}
       height={size}
       priority={priority}

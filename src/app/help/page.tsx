@@ -6,7 +6,7 @@ import Accordion, { type AccordionItem } from "@/components/Accordion";
 import { WHATSAPP_NUMBER, INSTAGRAM_URL } from "@/lib/constants";
 
 const WHATSAPP_SUPPORT_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-  "Hi BOTHRA'S SNACK'S Makhana, I need help with my order."
+  "Hi BOTHRA'S SNACKS Makhana, I need help with my order."
 )}`;
 
 function WhatsAppButton({ className = "" }: { className?: string }) {

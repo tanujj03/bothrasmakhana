@@ -5,7 +5,7 @@ import { useCartStore, cartItemCount } from "@/lib/store";
 import { WHATSAPP_NUMBER, INSTAGRAM_URL } from "@/lib/constants";
 
 const WHATSAPP_FLOAT_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-  "Hi BOTHRA'S SNACK'S Makhana, I'd like to know more about your products."
+  "Hi BOTHRA'S SNACKS Makhana, I'd like to know more about your products."
 )}`;
 
 // Shared shell for both floating buttons — same size/shape/shadow/hover so

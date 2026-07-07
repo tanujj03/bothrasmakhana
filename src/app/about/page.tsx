@@ -4,9 +4,9 @@ import Reveal from "@/components/Reveal";
 import BackButton from "@/components/BackButton";
 import { CITY_NAME } from "@/lib/constants";
 
-const TITLE = "About Us | BOTHRA'S SNACK'S MAKHANA";
+const TITLE = "About Us | BOTHRA'S SNACKS MAKHANA";
 const DESCRIPTION =
-  "Meet Jainam Bothra, founder of BOTHRA'S SNACK'S Makhana, and discover the story behind our roasted-not-fried, premium fox nut snacks.";
+  "Meet Jainam Bothra, founder of BOTHRA'S SNACKS Makhana, and discover the story behind our roasted-not-fried, premium fox nut snacks.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: TITLE,
     description: DESCRIPTION,
     url: "/about",
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "BOTHRA'S SNACK'S Makhana — Classic Roasted pouch" }],
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "BOTHRA'S SNACKS Makhana — Classic Roasted pouch" }],
   },
 };
 
@@ -29,7 +29,7 @@ export default function AboutPage() {
         <Reveal className="mb-14 text-center">
           <span className="eyebrow text-xs">About Us</span>
           <h1 className="mt-3 font-display text-4xl font-semibold text-text-primary sm:text-5xl">
-            The Story Behind BOTHRA&apos;S SNACK&apos;S
+            The Story Behind BOTHRA&apos;S SNACKS
           </h1>
         </Reveal>
 
@@ -38,7 +38,7 @@ export default function AboutPage() {
             <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-t-full rounded-b-xl shadow-2xl ring-1 ring-black/5">
               <Image
                 src="/products/owner.png"
-                alt="Jainam Bothra, founder of BOTHRA'S SNACK'S Makhana"
+                alt="Jainam Bothra, founder of BOTHRA'S SNACKS Makhana"
                 fill
                 priority
                 className="object-cover"
@@ -52,7 +52,7 @@ export default function AboutPage() {
               Jainam Bothra
             </h2>
             <p className="text-base leading-relaxed text-text-primary/70">
-              BOTHRA&apos;S SNACK&apos;S MAKHANA began with a simple frustration: every
+              BOTHRA&apos;S SNACKS MAKHANA began with a simple frustration: every
               snack on the shelf asked you to trade flavour for health, or
               health for flavour. Jainam set out to build something that
               asked for neither compromise — a premium roasted makhana that

@@ -65,7 +65,7 @@ export default function LoadingScreen() {
           >
             <Logo size={112} priority />
             <span className="font-display text-2xl tracking-wide text-text-primary">
-              BOTHRA&apos;S SNACK&apos;S
+              BOTHRA&apos;S SNACKS
             </span>
           </motion.div>
         </motion.div>

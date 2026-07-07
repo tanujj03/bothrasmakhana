@@ -45,7 +45,7 @@ export default function Footer() {
             <div className="flex items-center gap-2.5">
               <Logo size={44} />
               <span className="font-display text-xl font-semibold">
-                BOTHRA&apos;S SNACK&apos;S
+                BOTHRA&apos;S SNACKS
               </span>
             </div>
             <p className="text-sm text-footer-text/70">A Brand by Jainam Bothra</p>
@@ -143,7 +143,7 @@ export default function Footer() {
         </ul>
 
         <div className="mt-6 text-center text-xs text-footer-text/50">
-          &copy; {new Date().getFullYear()} BOTHRA&apos;S SNACK&apos;S. All rights reserved.
+          &copy; {new Date().getFullYear()} BOTHRA&apos;S SNACKS. All rights reserved.
         </div>
       </div>
     </footer>

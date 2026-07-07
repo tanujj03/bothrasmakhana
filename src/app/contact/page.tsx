@@ -82,7 +82,7 @@ export default function ContactPage() {
           <Reveal>
             <a
               href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-                "Hi BOTHRA'S SNACK'S Makhana, I'd like to know more about your products."
+                "Hi BOTHRA'S SNACKS Makhana, I'd like to know more about your products."
               )}`}
               target="_blank"
               rel="noopener noreferrer"

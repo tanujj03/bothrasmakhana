@@ -173,7 +173,7 @@ export function buildWhatsAppOrderMessage(
         : ["Payment: Cash on Delivery"];
 
   return [
-    "New Order - BOTHRA'S SNACK'S Makhana",
+    "New Order - BOTHRA'S SNACKS Makhana",
     "",
     `Customer: ${customer.name}`,
     `Phone: ${customer.phone}`,

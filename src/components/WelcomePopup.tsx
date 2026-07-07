@@ -146,7 +146,7 @@ export default function WelcomePopup() {
 
               <span className="eyebrow mt-5 block text-xs">Launch Offer</span>
               <h2 className="mt-2 font-display text-3xl font-semibold text-text-primary">
-                Welcome to BOTHRA&apos;S SNACK&apos;S
+                Welcome to BOTHRA&apos;S SNACKS
               </h2>
               <p className="mx-auto mt-3 max-w-xs text-sm leading-relaxed text-text-primary/70">
                 {LAUNCH_OFFER_TEXT}. Every flavor starts at{" "}
