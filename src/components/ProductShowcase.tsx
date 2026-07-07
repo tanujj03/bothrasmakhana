@@ -1,6 +1,7 @@
 import { PRODUCTS } from "@/lib/products";
 import ProductCard from "./ProductCard";
 import BundleCard from "./BundleCard";
+import SamplePackCard from "./SamplePackCard";
 import { RevealGroup, RevealItem } from "./Reveal";
 import SectionHeading from "./SectionHeading";
 
@@ -22,6 +23,9 @@ export default function ProductShowcase() {
           ))}
           <RevealItem>
             <BundleCard />
+          </RevealItem>
+          <RevealItem>
+            <SamplePackCard />
           </RevealItem>
         </RevealGroup>
       </div>

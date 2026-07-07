@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { PRODUCTS, type Spice } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
 import BundleCard from "@/components/BundleCard";
+import SamplePackCard from "@/components/SamplePackCard";
 import Reveal, { RevealGroup, RevealItem } from "@/components/Reveal";
 import BackButton from "@/components/BackButton";
 
@@ -68,6 +69,11 @@ export default function ShopPage() {
           {filter === "all" && (
             <RevealItem>
               <BundleCard />
+            </RevealItem>
+          )}
+          {filter === "all" && (
+            <RevealItem>
+              <SamplePackCard />
             </RevealItem>
           )}
         </RevealGroup>
