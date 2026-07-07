@@ -133,7 +133,13 @@ textarea:focus-visible,
   animation: cursor-idle-spin 9s ease-in-out infinite;
 }
 
-/* Barely-perceptible idle zoom on product photography */
+/* Barely-perceptible idle zoom on product photography. Hover-triggered only
+   (not `infinite` by default) — with 5-6 cards on a grid this was running
+   continuously and forever regardless of scroll position, and a Performance
+   trace showed it was a bigger contributor to main-thread compositing cost,
+   sitewide, than the hero's own animations. Hover-gating also means it's
+   simply inert on touch devices, which is exactly where that cost mattered
+   most. */
 @keyframes kenburns {
   0%,
   100% {
@@ -144,8 +150,44 @@ textarea:focus-visible,
   }
 }
 
-.animate-kenburns {
+.group:hover .animate-kenburns {
   animation: kenburns 10s ease-in-out infinite;
+}
+
+/* Hero ambient floaters: drift + spin, split across two nested elements so
+   each is a single-property CSS animation the browser can run natively
+   (compositor thread, no per-frame JS). Framer Motion's `animate` prop
+   previously drove x/y and rotate together with different durations in one
+   call, which it can't hand off to the Web Animations API — a Performance
+   trace showed it falling back to a JS-ticked update on every frame instead.
+   Per-floater travel distance/duration are supplied via CSS custom
+   properties (see Hero.tsx) since the distances differ per floater. */
+@keyframes floater-drift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(var(--drift-x, 0px), var(--drift-y, 0px));
+  }
+}
+
+@keyframes floater-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.floater-drift {
+  animation: floater-drift var(--drift-duration, 20s) ease-in-out infinite;
+  animation-delay: var(--drift-delay, 0s);
+}
+
+.floater-spin {
+  animation: floater-spin var(--spin-duration, 5s) linear infinite;
 }
 
 /* Slow, soft glow pulse for the primary hero CTA */
@@ -163,13 +205,16 @@ textarea:focus-visible,
   animation: cta-glow 3.5s ease-in-out infinite;
 }
 
-/* Per-flavor idle-pulsing border glow on product cards — runs continuously
-   and simultaneously on every card in a grid, so it animates opacity (a
+/* Per-flavor idle-pulsing border glow on product cards. Animates opacity (a
    compositor-only property) on a dedicated layer rather than animating
-   box-shadow itself every frame (forces a repaint per card per frame,
-   the kind of thing that adds up to scroll jank with 5-6 cards on screen).
-   The layer sits behind the card (not inside its overflow-hidden box) so
-   the glow can still spill outward past the card's rounded border. */
+   box-shadow itself every frame (forces a repaint per card per frame). Only
+   runs on hover now — with 5-6 cards on a grid, running this forever
+   regardless of scroll position was a bigger contributor to main-thread
+   compositing cost, sitewide, than the hero's own animations, and it's
+   simply inert on touch devices (no hover), which is exactly where that
+   cost mattered most. The layer sits behind the card (not inside its
+   overflow-hidden box) so the glow can still spill outward past the card's
+   rounded border. */
 @keyframes card-idle-glow-pulse {
   0%,
   100% {
@@ -187,12 +232,12 @@ textarea:focus-visible,
   pointer-events: none;
   box-shadow: 0 0 14px 1px var(--card-glow-color, transparent);
   opacity: 0;
-  animation: card-idle-glow-pulse 2.75s ease-in-out infinite;
-  will-change: opacity;
 }
 
 .group:hover .card-flavor-glow-layer {
   box-shadow: 0 0 28px 4px var(--card-glow-color, transparent);
+  animation: card-idle-glow-pulse 2.75s ease-in-out infinite;
+  will-change: opacity;
 }
 
 /* Toggled on <body> while the cart drawer (or another overlay reusing the

@@ -56,6 +56,11 @@ export default function Hero() {
   const stageRef = useRef<HTMLDivElement>(null);
   const [reduceMotion, setReduceMotion] = useState(false);
   const [isTouch, setIsTouch] = useState(false);
+  // Mobile GPUs/CPUs have far less headroom than desktop for the hero's
+  // stacked blur filters + floater/particle count, so below this width we
+  // swap in a lighter variant of each ambient effect rather than reusing
+  // the desktop one at a smaller size.
+  const [isMobile, setIsMobile] = useState(false);
   const [stageHovered, setStageHovered] = useState(false);
   const cartOpen = useCartStore((s) => s.isOpen);
   // Same intent as reduceMotion below (freeze the continuous ambient
@@ -80,6 +85,12 @@ export default function Hero() {
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
     );
     setIsTouch(window.matchMedia("(pointer: coarse)").matches);
+
+    const mobileQuery = window.matchMedia("(max-width: 768px)");
+    setIsMobile(mobileQuery.matches);
+    const onMobileChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mobileQuery.addEventListener("change", onMobileChange);
+    return () => mobileQuery.removeEventListener("change", onMobileChange);
   }, []);
 
   const clearAutoTimer = () => {
@@ -159,6 +170,14 @@ export default function Hero() {
     resumeTimerRef.current = setTimeout(startAutoTimer, HOVER_RESUME_DELAY);
   };
 
+  // Mobile gets fewer ambient floaters/particles than desktop (rather than
+  // the same count rendered smaller) — each is its own continuously
+  // animated + repainted layer, and mid-range phones don't have the frame
+  // budget for 8 floaters + 5 particles running at once alongside the rest
+  // of the hero's motion.
+  const floaters = isMobile ? FLOATERS.slice(0, 3) : FLOATERS;
+  const particles = isMobile ? PARTICLES.slice(0, 2) : PARTICLES;
+
   const goToShop = () => router.push("/shop");
 
   const handleStageKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -205,6 +224,16 @@ export default function Hero() {
         animate: { opacity: 1, transition: imageEnterTransition },
         exit: { opacity: 0, transition: imageExitTransition },
       }
+    : isMobile
+    ? // Mobile: opacity + scale only — no animated `filter: blur()`. Blur is
+      // one of the most expensive properties to animate on mobile GPUs, and
+      // this crossfade repeats every ROTATE_INTERVAL for as long as the hero
+      // is on screen.
+      {
+        initial: { opacity: 0, scale: 0.92 },
+        animate: { opacity: 1, scale: 1, transition: imageEnterTransition },
+        exit: { opacity: 0, scale: 0.92, transition: imageExitTransition },
+      }
     : {
         initial: { opacity: 0, scale: 0.85, filter: "blur(4px)" },
         animate: {
@@ -247,36 +276,37 @@ export default function Hero() {
           the plain section background, below the headline/CTA/main image (z-10). */}
       {!pauseAmbient && (
         <div className="pointer-events-none absolute inset-0 z-[6]" aria-hidden="true">
-          {FLOATERS.map((f, i) => (
-            <motion.div
+          {floaters.map((f, i) => (
+            <div
               key={i}
-              className="absolute"
-              style={{
-                top: f.top,
-                left: f.left,
-                width: f.size,
-                height: f.size,
-                opacity: f.opacity,
-              }}
-              animate={{
-                x: [0, f.travelX, 0],
-                y: [0, f.travelY, 0],
-                rotate: 360,
-              }}
-              transition={{
-                x: { duration: f.duration, delay: f.delay, repeat: Infinity, ease: "easeInOut" },
-                y: { duration: f.duration, delay: f.delay, repeat: Infinity, ease: "easeInOut" },
-                rotate: { duration: f.spinDuration, repeat: Infinity, ease: "linear" },
-              }}
+              className="floater-drift absolute"
+              style={
+                {
+                  top: f.top,
+                  left: f.left,
+                  width: f.size,
+                  height: f.size,
+                  opacity: f.opacity,
+                  "--drift-x": `${f.travelX}px`,
+                  "--drift-y": `${f.travelY}px`,
+                  "--drift-duration": `${f.duration}s`,
+                  "--drift-delay": `${f.delay}s`,
+                } as React.CSSProperties
+              }
             >
-              <Image
-                src={f.image}
-                alt=""
-                fill
-                className="object-contain"
-                sizes={`${f.size}px`}
-              />
-            </motion.div>
+              <div
+                className="floater-spin h-full w-full"
+                style={{ "--spin-duration": `${f.spinDuration}s` } as React.CSSProperties}
+              >
+                <Image
+                  src={f.image}
+                  alt=""
+                  fill
+                  className="object-contain"
+                  sizes={`${f.size}px`}
+                />
+              </div>
+            </div>
           ))}
         </div>
       )}
@@ -394,12 +424,15 @@ export default function Hero() {
                 style={{ perspective: 1000 }}
                 className="relative aspect-square w-full cursor-pointer"
               >
-                {/* Radial violet glow */}
+                {/* Radial violet glow. The box-blur is dropped on mobile — the
+                    gradient already fades smoothly to transparent on its own,
+                    and an animated `blur-3xl` (64px) filter is one of the
+                    costlier things a mobile GPU can be asked to composite. */}
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 1.2, ease: "easeOut", delay: ENTRANCE_DELAY }}
-                  className="absolute inset-0 rounded-full blur-3xl"
+                  className={`absolute inset-0 rounded-full ${isMobile ? "" : "blur-3xl"}`}
                   style={{
                     background:
                       "radial-gradient(circle, rgba(30,15,46,0.09) 0%, rgba(30,15,46,0) 70%)",
@@ -411,7 +444,7 @@ export default function Hero() {
                 <motion.div
                   animate={{ opacity: stageHovered ? 1 : 0 }}
                   transition={{ duration: 0.3, ease: "easeOut" }}
-                  className="absolute inset-0 rounded-full blur-3xl"
+                  className={`absolute inset-0 rounded-full ${isMobile ? "" : "blur-3xl"}`}
                   style={{
                     background:
                       "radial-gradient(circle, color-mix(in srgb, var(--accent-gold) 16%, transparent) 0%, transparent 70%)",
@@ -419,23 +452,41 @@ export default function Hero() {
                   aria-hidden="true"
                 />
 
-                {/* Flavor-reactive ambient tint, one static-color layer per flavor, only the active one visible */}
-                {PRODUCTS.map((product, i) => (
-                  <motion.div
-                    key={product.id}
-                    animate={{ opacity: i === activeIndex ? 1 : 0 }}
-                    transition={glowTransition}
-                    className="absolute inset-0 rounded-full blur-3xl"
+                {/* Flavor-reactive ambient tint. Desktop keeps one static-color
+                    layer per flavor, crossfading opacity between them. Mobile
+                    only ever mounts the active flavor's layer (no blur, no
+                    crossfade) instead of paying for 5 always-mounted blurred
+                    circles to get a transition that's barely noticeable at
+                    this size anyway. */}
+                {isMobile ? (
+                  <div
+                    className="absolute inset-0 rounded-full"
                     style={{
-                      background: `radial-gradient(circle, ${hexToRgba(product.flavorHex, 0.14)} 0%, transparent 70%)`,
+                      background: `radial-gradient(circle, ${hexToRgba(active.flavorHex, 0.14)} 0%, transparent 70%)`,
                     }}
                     aria-hidden="true"
                   />
-                ))}
+                ) : (
+                  PRODUCTS.map((product, i) => (
+                    <motion.div
+                      key={product.id}
+                      animate={{ opacity: i === activeIndex ? 1 : 0 }}
+                      transition={glowTransition}
+                      className="absolute inset-0 rounded-full blur-3xl"
+                      style={{
+                        background: `radial-gradient(circle, ${hexToRgba(product.flavorHex, 0.14)} 0%, transparent 70%)`,
+                      }}
+                      aria-hidden="true"
+                    />
+                  ))
+                )}
 
-                {/* Ambient gold particles */}
+                {/* Ambient gold particles. Mobile drops the count (see
+                    `particles` above) and the animated `blur(3px)` filter —
+                    a plain small dot at lower opacity reads close enough to
+                    the soft blurred version without the per-frame filter cost. */}
                 {!pauseAmbient &&
-                  PARTICLES.map((p, i) => (
+                  particles.map((p, i) => (
                     <motion.span
                       key={i}
                       className="absolute rounded-full bg-accent-gold"
@@ -444,7 +495,7 @@ export default function Hero() {
                         height: p.size,
                         top: p.top,
                         left: p.left,
-                        filter: "blur(3px)",
+                        filter: isMobile ? undefined : "blur(3px)",
                         opacity: 0.5,
                       }}
                       animate={{
@@ -480,20 +531,25 @@ export default function Hero() {
                   aria-hidden="true"
                 />
 
-                {/* Layered second makhana, larger + heavily blurred, for ambient depth behind the main image */}
-                <div
-                  className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[110%] w-[110%] -translate-x-[46%] -translate-y-[44%] opacity-20 blur-lg"
-                  aria-hidden="true"
-                >
-                  <Image
-                    src="/products/makhana1.png"
-                    alt=""
-                    fill
-                    priority
-                    className="object-contain"
-                    sizes="400px"
-                  />
-                </div>
+                {/* Layered second makhana, larger + heavily blurred, for ambient
+                    depth behind the main image. Skipped on mobile — blurring
+                    actual raster image content is heavier than blurring a
+                    CSS gradient, and this layer is purely decorative. */}
+                {!isMobile && (
+                  <div
+                    className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[110%] w-[110%] -translate-x-[46%] -translate-y-[44%] opacity-20 blur-lg"
+                    aria-hidden="true"
+                  >
+                    <Image
+                      src="/products/makhana1.png"
+                      alt=""
+                      fill
+                      priority
+                      className="object-contain"
+                      sizes="400px"
+                    />
+                  </div>
+                )}
 
                 {/* Mouse tilt wrapper */}
                 <motion.div
