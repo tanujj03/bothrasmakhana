@@ -19,9 +19,11 @@ interface Particle {
   duration: number;
 }
 
+const PARTICLE_COUNT = 32;
+
 function generateParticles(): Particle[] {
   const particles: Particle[] = [];
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
     const fromLeft = i % 2 === 0;
     particles.push({
       id: i,
@@ -53,7 +55,11 @@ function ConfettiBurst() {
   if (!ready) return null;
 
   return (
-    <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+    // z-20 lifts this above the dialog box below (a sibling with no z-index
+    // of its own) — without it, being first in DOM order meant the dialog's
+    // opaque background painted over the burst instead of it reading as a
+    // party-popper effect in front of the popup.
+    <div className="pointer-events-none absolute inset-0 z-20" aria-hidden="true">
       {particles.map((p) => (
         <motion.span
           key={p.id}
