@@ -60,9 +60,9 @@ export default function ShopPage() {
           key={filter}
           className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
-          {visibleProducts.map((product) => (
+          {visibleProducts.map((product, i) => (
             <RevealItem key={product.id}>
-              <ProductCard product={product} />
+              <ProductCard product={product} priority={i < 3} />
             </RevealItem>
           ))}
           {filter === "all" && (

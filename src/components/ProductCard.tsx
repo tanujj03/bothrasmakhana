@@ -13,7 +13,13 @@ import AddToCartButton from "./AddToCartButton";
 import { useCartStore } from "@/lib/store";
 import { DEFAULT_SIZE, type SizeKey } from "@/lib/constants";
 
-export default function ProductCard({ product }: { product: Product }) {
+export default function ProductCard({
+  product,
+  priority = false,
+}: {
+  product: Product;
+  priority?: boolean;
+}) {
   const [modalOpen, setModalOpen] = useState(false);
   const [size, setSize] = useState<SizeKey>(DEFAULT_SIZE);
   const addItem = useCartStore((s) => s.addItem);
@@ -75,6 +81,7 @@ export default function ProductCard({ product }: { product: Product }) {
                 src={product.image}
                 alt={product.name}
                 fill
+                priority={priority}
                 className="object-contain p-6 transition-transform duration-300 group-hover:scale-[1.03]"
                 sizes="(max-width: 768px) 90vw, 320px"
               />
