@@ -6,6 +6,7 @@ import Nutrition from "@/components/Nutrition";
 import Testimonials from "@/components/Testimonials";
 import FAQ from "@/components/FAQ";
 import InstagramStrip from "@/components/InstagramStrip";
+import ThankYouNote from "@/components/ThankYouNote";
 
 const TITLE = "BOTHRA'S SNACK'S MAKHANA | Not Just a Snack. A Statement.";
 const DESCRIPTION =
@@ -33,6 +34,7 @@ export default function Home() {
       <Testimonials />
       <FAQ />
       <InstagramStrip />
+      <ThankYouNote />
     </>
   );
 }
