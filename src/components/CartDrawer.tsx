@@ -154,11 +154,17 @@ export default function CartDrawer() {
 
                 {items.length > 0 && (
                   <div className="border-t border-black/10 px-6 py-5">
-                    <div className="mb-4 flex items-center justify-between">
+                    <div className="mb-3 flex items-center justify-between">
                       <span className="font-body text-sm font-medium text-text-primary/70">
                         Subtotal
                       </span>
                       <span className="font-display text-lg font-semibold">₹{subtotal}</span>
+                    </div>
+                    <div className="mb-4 flex items-center gap-1.5 text-xs font-semibold text-accent-gold-strong">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                        <path d="M3 16V6a1 1 0 011-1h9v11M3 16h1m0 0a2 2 0 104 0m-4 0a2 2 0 114 0m9 0a2 2 0 104 0m-4 0a2 2 0 114 0m-9 0h9m0 0h2.5a1 1 0 00.9-.55L21 11h-8" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      Free Delivery on this order
                     </div>
                     <button
                       onClick={() => setStep("checkout")}

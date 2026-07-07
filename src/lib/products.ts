@@ -25,6 +25,7 @@ const SHARED_BADGES = [
   "Protein Rich",
   "Gluten Free",
   "Light & Crunchy",
+  "Free Delivery",
 ] as const;
 
 // Every field below was re-verified against the actual image files in

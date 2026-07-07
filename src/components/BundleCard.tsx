@@ -1,10 +1,12 @@
 "use client";
 
+import { useRef } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { PRODUCTS } from "@/lib/products";
 import { PRICING, DEFAULT_SIZE } from "@/lib/constants";
 import AddToCartButton from "./AddToCartButton";
+import ProductBadges from "./ProductBadges";
 import { useCartStore } from "@/lib/store";
 
 const BUNDLE_SIZE = DEFAULT_SIZE;
@@ -25,6 +27,11 @@ export default function BundleCard() {
   const addItem = useCartStore((s) => s.addItem);
   const openCart = useCartStore((s) => s.openCart);
 
+  // See ProductCard.tsx for why this is gated on visibility — same
+  // always-on idle-glow layer, same fix.
+  const cardRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(cardRef, { margin: "200px 0px" });
+
   const handleAddToCart = () => {
     const base = Math.floor(BUNDLE_PRICE / PRODUCTS.length);
     const remainder = BUNDLE_PRICE - base * PRODUCTS.length;
@@ -44,12 +51,17 @@ export default function BundleCard() {
 
   return (
     <motion.div
+      ref={cardRef}
       whileHover={{ y: -6 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
       style={cardStyle}
       className="group relative"
     >
-      <div className="card-flavor-glow-layer" aria-hidden="true" />
+      <div
+        className="card-flavor-glow-layer"
+        style={{ animationPlayState: inView ? "running" : "paused" }}
+        aria-hidden="true"
+      />
 
       <div
         className="relative z-10 rounded-xl p-[4.5px]"
@@ -81,7 +93,9 @@ export default function BundleCard() {
             One of each flavor, 50g each — the full BOTHRA&apos;S experience.
           </p>
 
-          <p className="mt-4 text-[11px] font-semibold uppercase tracking-wider text-accent-gold-strong">
+          <ProductBadges badges={["Free Delivery"]} className="mt-4" />
+
+          <p className="mt-3 text-[11px] font-semibold uppercase tracking-wider text-accent-gold-strong">
             Save 10% When You Bundle
           </p>
 

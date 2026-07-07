@@ -14,6 +14,9 @@ const ICONS: Record<string, React.ReactNode> = {
   "Roasted Not Fried": (
     <path d="M6 20c-2-3-2-7 0-10 1 1.5 1.5 2 1.5 2S7 9 9 6c1 2 3 2.5 4 4.5 1-1 1-2 1-2 2 2 3 5 2 7.5-1 2.5-3.5 4-6 4s-3-1-4-2z" strokeLinecap="round" strokeLinejoin="round" />
   ),
+  "Free Delivery": (
+    <path d="M3 16V6a1 1 0 011-1h9v11M3 16h1m0 0a2 2 0 104 0m-4 0a2 2 0 114 0m9 0a2 2 0 104 0m-4 0a2 2 0 114 0m-9 0h9m0 0h2.5a1 1 0 00.9-.55L21 11h-8" strokeLinecap="round" strokeLinejoin="round" />
+  ),
   "Net Weight 50g": (
     <path d="M12 3l7 4v10l-7 4-7-4V7l7-4z" strokeLinecap="round" strokeLinejoin="round" />
   ),

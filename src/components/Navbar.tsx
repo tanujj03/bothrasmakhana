@@ -105,6 +105,16 @@ export default function Navbar() {
           </ul>
 
           <div className="flex items-center gap-3">
+            <span
+              className={`hidden whitespace-nowrap rounded-full border px-2.5 py-1 text-[9px] font-semibold uppercase tracking-wide sm:inline-flex sm:items-center ${SCROLL_TRANSITION} ${
+                scrolled
+                  ? "border-accent-gold/40 text-accent-gold"
+                  : "border-text-primary/20 text-text-primary/80"
+              }`}
+            >
+              🚚 Free Shipping Across India
+            </span>
+
             <button
               onClick={toggleCart}
               aria-label={`Open cart, ${count} items`}
