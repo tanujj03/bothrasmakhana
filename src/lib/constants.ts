@@ -3,8 +3,8 @@
 export const SITE_URL = "https://www.bothrassnacks.com";
 
 export const WHATSAPP_NUMBER = "919270785725";
-export const INSTAGRAM_HANDLE = "@thebothras.in";
-export const INSTAGRAM_URL = "https://www.instagram.com/thebothras.in/";
+export const INSTAGRAM_HANDLE = "@bothrassnacks";
+export const INSTAGRAM_URL = "https://www.instagram.com/bothrassnacks/";
 export const CONTACT_EMAIL = "bothrassnacks@gmail.com";
 export const CITY_NAME = "Hinganghat";
 

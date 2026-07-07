@@ -1,11 +1,11 @@
 import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from "@/lib/constants";
-import Reveal, { RevealGroup, RevealItem } from "./Reveal";
+import Reveal from "./Reveal";
 
 export default function InstagramStrip() {
   return (
     <section className="bg-bg-base py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
-        <Reveal className="mb-10 text-center">
+        <Reveal className="text-center">
           <a
             href={INSTAGRAM_URL}
             target="_blank"
@@ -20,20 +20,6 @@ export default function InstagramStrip() {
             Follow {INSTAGRAM_HANDLE}
           </a>
         </Reveal>
-
-        <RevealGroup className="grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-6">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <RevealItem key={i}>
-              <a
-                href={INSTAGRAM_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="View on Instagram"
-                className="block aspect-square overflow-hidden rounded-lg bg-bg-secondary transition-opacity duration-200 ease-in-out hover:opacity-80"
-              />
-            </RevealItem>
-          ))}
-        </RevealGroup>
       </div>
     </section>
   );
