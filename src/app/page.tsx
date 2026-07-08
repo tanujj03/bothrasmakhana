@@ -8,19 +8,55 @@ import FAQ from "@/components/FAQ";
 import InstagramStrip from "@/components/InstagramStrip";
 import ThankYouNote from "@/components/ThankYouNote";
 
-const TITLE = "BOTHRA'S SNACKS MAKHANA | Not Just a Snack. A Statement.";
+const TITLE = "BOTHRA'S SNACKS MAKHANA | Buy Roasted Makhana Online India";
 const DESCRIPTION =
-  "Shop premium roasted-not-fried makhana in 5 bold flavors — Classic, Pudina, Chat Masala, Peri Peri & Turmeric Fusion. Low calorie, protein rich, 100% natural.";
+  "Buy premium roasted makhana (fox nuts) online in India — Classic, Pudina, Chat Masala, Peri Peri & Turmeric Fusion. Protein rich, gluten free, guilt-free snack.";
+const KEYWORDS = [
+  "roasted makhana",
+  "fox nuts",
+  "lotus seeds snack",
+  "healthy snacks India",
+  "protein rich snacks",
+  "low calorie snacks",
+  "gluten free snacks",
+  "guilt-free snacking",
+  "premium makhana",
+  "flavored makhana",
+  "makhana online order",
+  "makhana online india",
+  "buy makhana online India",
+  "Bothra's Snacks",
+  "D2C snacks India",
+  "healthy snacks online",
+  "snacks online India",
+  "Indian snacks online",
+  "healthy namkeen",
+  "evening snacks",
+  "tea time snacks",
+  "guilt-free snacks",
+  "snacks brand India",
+  "healthy nashta",
+];
 
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
+  keywords: KEYWORDS,
   alternates: { canonical: "/" },
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,
     url: "/",
+    siteName: "BOTHRA'S SNACKS MAKHANA",
+    locale: "en_IN",
+    type: "website",
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "BOTHRA'S SNACKS Makhana — Classic Roasted pouch" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ["/og-image.jpg"],
   },
 };
 

@@ -2,19 +2,57 @@ import type { Metadata } from "next";
 import { PRODUCTS } from "@/lib/products";
 import { PRICING, DEFAULT_SIZE, SITE_URL } from "@/lib/constants";
 
-const TITLE = "Shop All Flavors | BOTHRA'S SNACKS MAKHANA";
+const TITLE = "Shop All Flavors | Buy Makhana Online | BOTHRA'S SNACKS MAKHANA";
 const DESCRIPTION =
-  "Browse all 5 roasted-not-fried makhana flavors from BOTHRA'S SNACKS — Classic, Pudina, Chat Masala, Peri Peri & Turmeric Fusion. Mild and spicy options available.";
+  "Order roasted-not-fried makhana online — Classic, Pudina, Chat Masala, Peri Peri & Turmeric Fusion. Low calorie, protein rich, gluten free, India-wide delivery.";
+const KEYWORDS = [
+  "peri peri makhana",
+  "chat masala makhana",
+  "pudina makhana",
+  "turmeric fusion makhana",
+  "classic roasted makhana",
+  "flavored makhana",
+  "buy makhana online India",
+  "makhana online order",
+  "makhana online india",
+  "premium makhana online",
+  "healthy namkeen online",
+  "roasted makhana snacks",
+  "order makhana Maharashtra",
+  "spicy makhana",
+  "minty makhana",
+  "namkeen online",
+  "healthy snacks online",
+  "diet snacks",
+  "snacks for weight loss",
+  "office snacks",
+  "travel snacks",
+  "kids healthy snacks",
+  "gifting snacks",
+  "festive snacks",
+  "Diwali snacks gift",
+  "snack gift pack",
+];
 
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
+  keywords: KEYWORDS,
   alternates: { canonical: "/shop" },
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,
     url: "/shop",
+    siteName: "BOTHRA'S SNACKS MAKHANA",
+    locale: "en_IN",
+    type: "website",
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "BOTHRA'S SNACKS Makhana — Classic Roasted pouch" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ["/og-image.jpg"],
   },
 };
 

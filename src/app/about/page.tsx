@@ -4,19 +4,45 @@ import Reveal from "@/components/Reveal";
 import BackButton from "@/components/BackButton";
 import { CITY_NAME } from "@/lib/constants";
 
-const TITLE = "About Us | BOTHRA'S SNACKS MAKHANA";
+const TITLE = "About Us | Our Story | BOTHRA'S SNACKS MAKHANA";
 const DESCRIPTION =
-  "Meet Jainam Bothra, founder of BOTHRA'S SNACKS Makhana, and discover the story behind our roasted-not-fried, premium fox nut snacks.";
+  "Meet Jainam Bothra, founder of BOTHRA'S SNACKS in Hinganghat, Maharashtra — the story behind our roasted-not-fried, premium makhana loved across Nagpur & beyond.";
+const KEYWORDS = [
+  "Bothra's Snacks",
+  "makhana Nagpur",
+  "makhana Maharashtra",
+  "makhana Hinganghat",
+  "healthy snacks Nagpur",
+  "order makhana Maharashtra",
+  "D2C snacks India",
+  "premium makhana",
+  "roasted makhana",
+  "fox nuts",
+  "snacks brand India",
+  "healthy nashta",
+  "guilt-free snacks",
+  "festive snacks",
+];
 
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
+  keywords: KEYWORDS,
   alternates: { canonical: "/about" },
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,
     url: "/about",
+    siteName: "BOTHRA'S SNACKS MAKHANA",
+    locale: "en_IN",
+    type: "website",
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "BOTHRA'S SNACKS Makhana — Classic Roasted pouch" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ["/og-image.jpg"],
   },
 };
 

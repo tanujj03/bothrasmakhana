@@ -36,11 +36,22 @@ const manrope = Manrope({
 const SITE_TITLE = "BOTHRA'S SNACKS MAKHANA | Not Just a Snack. A Statement.";
 const SITE_DESCRIPTION =
   "Premium roasted makhana (fox nuts) by Jainam Bothra. Low calorie, protein rich, gluten free, roasted not fried. Not Just a Snack. A Statement.";
+const SITE_KEYWORDS = [
+  "roasted makhana",
+  "fox nuts",
+  "lotus seeds snack",
+  "healthy snacks India",
+  "premium makhana",
+  "Bothra's Snacks",
+  "buy makhana online India",
+  "makhana Maharashtra",
+];
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: SITE_TITLE,
   description: SITE_DESCRIPTION,
+  keywords: SITE_KEYWORDS,
   openGraph: {
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
