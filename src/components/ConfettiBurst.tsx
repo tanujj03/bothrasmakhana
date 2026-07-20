@@ -16,27 +16,19 @@ interface Particle {
 
 const DEFAULT_PARTICLE_COUNT = 32;
 
-function generateParticles(count: number, compact: boolean): Particle[] {
+function generateParticles(count: number): Particle[] {
   const particles: Particle[] = [];
-  // Compact spread keeps travel distances short enough to stay inside a
-  // small clipped box (CartDrawer's coupon chip) rather than the wide-open
-  // travel WelcomePopup uses, which relies on an unclipped ancestor.
-  const dxRange = compact ? [18, 46] : [50, 140];
-  const dyRange = compact ? [16, 42] : [60, 200];
-  const sizeRange = compact ? [3, 6] : [4, 8];
-  const durationRange = compact ? [0.6, 1.0] : [0.9, 1.5];
-
   for (let i = 0; i < count; i++) {
     const fromLeft = i % 2 === 0;
     particles.push({
       id: i,
       left: fromLeft ? 2 + Math.random() * 14 : 84 + Math.random() * 14,
-      dx: (fromLeft ? -1 : 1) * (dxRange[0] + Math.random() * (dxRange[1] - dxRange[0])),
-      dy: -(dyRange[0] + Math.random() * (dyRange[1] - dyRange[0])),
+      dx: (fromLeft ? -1 : 1) * (50 + Math.random() * 90),
+      dy: -(60 + Math.random() * 140),
       rotate: (Math.random() - 0.5) * 200,
-      size: sizeRange[0] + Math.random() * (sizeRange[1] - sizeRange[0]),
+      size: 4 + Math.random() * 4,
       delay: Math.random() * 0.25,
-      duration: durationRange[0] + Math.random() * (durationRange[1] - durationRange[0]),
+      duration: 0.9 + Math.random() * 0.6,
     });
   }
   return particles;
@@ -45,20 +37,15 @@ function generateParticles(count: number, compact: boolean): Particle[] {
 interface ConfettiBurstProps {
   /** Number of particles. Defaults to 32 (WelcomePopup's original density). */
   count?: number;
-  /**
-   * Shortens travel distance so the burst reads well inside a small,
-   * overflow-clipped container instead of spilling past its edges.
-   */
-  compact?: boolean;
 }
 
 // Shared by WelcomePopup and CartDrawer's coupon success state — anchor a
 // `relative` container around wherever this is mounted, it fills that box.
-export default function ConfettiBurst({
-  count = DEFAULT_PARTICLE_COUNT,
-  compact = false,
-}: ConfettiBurstProps) {
-  const particles = useMemo(() => generateParticles(count, compact), [count, compact]);
+// Renders unclipped (no overflow-hidden here or on the caller's wrapper) so
+// the burst reads as a party-popper effect above the surrounding content
+// rather than being cut off.
+export default function ConfettiBurst({ count = DEFAULT_PARTICLE_COUNT }: ConfettiBurstProps) {
+  const particles = useMemo(() => generateParticles(count), [count]);
   // Mounting these a beat after the parent's own entrance (instead of in the
   // same commit) spreads the DOM-creation + animation start-up cost across
   // two frames rather than dumping it all into one — that first frame was

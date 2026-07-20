@@ -6,9 +6,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useCartStore, cartSubtotal, cartDiscount } from "@/lib/store";
 import SizeSelector from "./SizeSelector";
 import CheckoutForm from "./CheckoutForm";
-import ConfettiBurst from "./ConfettiBurst";
+import MakhanaRain from "./MakhanaRain";
 
-const CONFETTI_DURATION_MS = 1600;
+const COUPON_RAIN_DURATION_MS = 1800;
 
 export default function CartDrawer() {
   const isOpen = useCartStore((s) => s.isOpen);
@@ -26,16 +26,16 @@ export default function CartDrawer() {
   const [step, setStep] = useState<"cart" | "checkout">("cart");
   const [couponInput, setCouponInput] = useState("");
   const [couponError, setCouponError] = useState<string | null>(null);
-  const [showConfetti, setShowConfetti] = useState(false);
-  const [confettiKey, setConfettiKey] = useState(0);
-  const confettiTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [showCouponRain, setShowCouponRain] = useState(false);
+  const [couponRainKey, setCouponRainKey] = useState(0);
+  const couponRainTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const subtotal = cartSubtotal(items);
   const discount = cartDiscount(items, couponCode);
   const total = subtotal - discount;
 
   useEffect(() => {
     return () => {
-      if (confettiTimeoutRef.current) clearTimeout(confettiTimeoutRef.current);
+      if (couponRainTimeoutRef.current) clearTimeout(couponRainTimeoutRef.current);
     };
   }, []);
 
@@ -48,12 +48,12 @@ export default function CartDrawer() {
     if (success) {
       setCouponError(null);
       setCouponInput("");
-      setConfettiKey((k) => k + 1);
-      setShowConfetti(true);
-      if (confettiTimeoutRef.current) clearTimeout(confettiTimeoutRef.current);
-      confettiTimeoutRef.current = setTimeout(
-        () => setShowConfetti(false),
-        CONFETTI_DURATION_MS
+      setCouponRainKey((k) => k + 1);
+      setShowCouponRain(true);
+      if (couponRainTimeoutRef.current) clearTimeout(couponRainTimeoutRef.current);
+      couponRainTimeoutRef.current = setTimeout(
+        () => setShowCouponRain(false),
+        COUPON_RAIN_DURATION_MS
       );
     } else {
       setCouponError("Invalid coupon code");
@@ -202,26 +202,33 @@ export default function CartDrawer() {
                   <div className="border-t border-black/10 px-6 pb-5 pt-5">
                     <div className="mb-5">
                       {couponCode ? (
-                        <div className="relative flex items-center justify-between gap-3 overflow-hidden rounded-xl border border-accent-gold/50 bg-gradient-to-r from-accent-gold/15 via-accent-gold/5 to-transparent px-4 py-3">
-                          {showConfetti && (
-                            <ConfettiBurst key={confettiKey} count={48} compact />
-                          )}
-                          <div className="flex items-center gap-2.5">
-                            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-gold text-bg-base">
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
-                                <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
-                              </svg>
-                            </span>
-                            <span className="font-body text-xs font-semibold text-text-primary">
-                              Coupon Applied
-                            </span>
+                        <div className="relative">
+                          {/* Sibling of the bordered box below, not a child of it —
+                              mirrors WelcomePopup's structure so the rain renders
+                              fully visible above/around the box instead of being
+                              clipped by it. Neither this wrapper nor any ancestor
+                              up to the drawer itself sets overflow, and the
+                              scrollable item list is a sibling (not a parent) of
+                              this footer section, so nothing clips the rain. */}
+                          {showCouponRain && <MakhanaRain key={couponRainKey} count={70} />}
+                          <div className="flex items-center justify-between gap-3 rounded-xl border border-accent-gold/50 bg-gradient-to-r from-accent-gold/15 via-accent-gold/5 to-transparent px-4 py-3">
+                            <div className="flex items-center gap-2.5">
+                              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-gold text-bg-base">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+                                  <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                              </span>
+                              <span className="font-body text-xs font-semibold text-text-primary">
+                                Coupon Applied
+                              </span>
+                            </div>
+                            <button
+                              onClick={handleRemoveCoupon}
+                              className="shrink-0 font-body text-[11px] font-medium text-text-primary/45 underline-offset-2 transition-colors duration-200 ease-in-out hover:text-flavor-periperi hover:underline"
+                            >
+                              Remove
+                            </button>
                           </div>
-                          <button
-                            onClick={handleRemoveCoupon}
-                            className="shrink-0 font-body text-[11px] font-medium text-text-primary/45 underline-offset-2 transition-colors duration-200 ease-in-out hover:text-flavor-periperi hover:underline"
-                          >
-                            Remove
-                          </button>
                         </div>
                       ) : (
                         <div>
