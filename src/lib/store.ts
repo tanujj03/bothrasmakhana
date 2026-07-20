@@ -14,9 +14,14 @@ export interface CartItem {
 
 const lineKey = (id: string, size: SizeKey) => `${id}::${size}`;
 
+export const COUPONS: Record<string, number> = {
+  CRUNCH15: 15,
+};
+
 interface CartState {
   items: CartItem[];
   isOpen: boolean;
+  couponCode: string | null;
   addItem: (
     item: Omit<CartItem, "qty" | "price"> & { size?: SizeKey; price?: number },
     qty?: number
@@ -29,6 +34,8 @@ interface CartState {
   openCart: () => void;
   closeCart: () => void;
   toggleCart: () => void;
+  applyCoupon: (code: string) => boolean;
+  clearCoupon: () => void;
 }
 
 export const useCartStore = create<CartState>()(
@@ -36,6 +43,7 @@ export const useCartStore = create<CartState>()(
     (set) => ({
       items: [],
       isOpen: false,
+      couponCode: null,
       addItem: (item, qty = 1) =>
         set((state) => {
           const size = item.size ?? DEFAULT_SIZE;
@@ -63,21 +71,29 @@ export const useCartStore = create<CartState>()(
           ),
         })),
       decrementItem: (id, size) =>
-        set((state) => ({
-          items: state.items
+        set((state) => {
+          const items = state.items
             .map((i) =>
               lineKey(i.id, i.size) === lineKey(id, size)
                 ? { ...i, qty: i.qty - 1 }
                 : i
             )
-            .filter((i) => i.qty > 0),
-        })),
+            .filter((i) => i.qty > 0);
+          return {
+            items,
+            couponCode: items.length === 0 ? null : state.couponCode,
+          };
+        }),
       removeItem: (id, size) =>
-        set((state) => ({
-          items: state.items.filter(
+        set((state) => {
+          const items = state.items.filter(
             (i) => lineKey(i.id, i.size) !== lineKey(id, size)
-          ),
-        })),
+          );
+          return {
+            items,
+            couponCode: items.length === 0 ? null : state.couponCode,
+          };
+        }),
       changeItemSize: (id, oldSize, newSize) =>
         set((state) => {
           const target = state.items.find(
@@ -109,14 +125,21 @@ export const useCartStore = create<CartState>()(
             ),
           };
         }),
-      clearCart: () => set({ items: [] }),
+      clearCart: () => set({ items: [], couponCode: null }),
       openCart: () => set({ isOpen: true }),
       closeCart: () => set({ isOpen: false }),
       toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
+      applyCoupon: (code) => {
+        const normalized = code.trim().toUpperCase();
+        const isValid = normalized in COUPONS;
+        if (isValid) set({ couponCode: normalized });
+        return isValid;
+      },
+      clearCoupon: () => set({ couponCode: null }),
     }),
     {
       name: "bothras-cart",
-      partialize: (state) => ({ items: state.items }),
+      partialize: (state) => ({ items: state.items, couponCode: state.couponCode }),
     }
   )
 );
@@ -126,6 +149,15 @@ export const cartItemCount = (items: CartItem[]) =>
 
 export const cartSubtotal = (items: CartItem[]) =>
   items.reduce((sum, i) => sum + i.qty * i.price, 0);
+
+export const couponPercent = (couponCode: string | null | undefined) =>
+  couponCode ? COUPONS[couponCode] ?? 0 : 0;
+
+export const cartDiscount = (items: CartItem[], couponCode: string | null | undefined) =>
+  Math.round((cartSubtotal(items) * couponPercent(couponCode)) / 100);
+
+export const cartTotal = (items: CartItem[], couponCode: string | null | undefined) =>
+  cartSubtotal(items) - cartDiscount(items, couponCode);
 
 export type PaymentMethod = "cod" | "upi" | "razorpay";
 
@@ -154,13 +186,25 @@ export async function generateRazorpayLink(orderDetails: {
 export function buildWhatsAppOrderMessage(
   items: CartItem[],
   customer: CustomerDetails,
-  razorpayLink?: string
+  razorpayLink?: string,
+  couponCode?: string | null
 ) {
   const lines = items.map((item, idx) => {
     const lineTotal = item.qty * item.price;
     return `${idx + 1}. ${item.name} (${item.size}) x${item.qty} - ₹${lineTotal}`;
   });
-  const total = cartSubtotal(items);
+  const subtotal = cartSubtotal(items);
+  const discount = cartDiscount(items, couponCode);
+  const total = subtotal - discount;
+
+  const totalLines =
+    discount > 0
+      ? [
+          `Subtotal: ₹${subtotal}`,
+          `Coupon (${couponCode}): -₹${discount}`,
+          `Total: ₹${total}`,
+        ]
+      : [`Total: ₹${total}`];
 
   const paymentLines =
     customer.paymentMethod === "upi"
@@ -183,7 +227,7 @@ export function buildWhatsAppOrderMessage(
     "Order:",
     ...lines,
     "",
-    `Total: ₹${total}`,
+    ...totalLines,
     ...paymentLines,
   ].join("\n");
 }
@@ -192,10 +236,11 @@ export function whatsappCheckoutUrl(
   items: CartItem[],
   customer: CustomerDetails,
   number: string,
-  razorpayLink?: string
+  razorpayLink?: string,
+  couponCode?: string | null
 ) {
   const text = encodeURIComponent(
-    buildWhatsAppOrderMessage(items, customer, razorpayLink)
+    buildWhatsAppOrderMessage(items, customer, razorpayLink, couponCode)
   );
   return `https://wa.me/${number}?text=${text}`;
 }
@@ -207,16 +252,23 @@ export function whatsappCheckoutUrl(
 export async function submitOrder(
   items: CartItem[],
   customer: CustomerDetails,
-  whatsappNumber: string
+  whatsappNumber: string,
+  couponCode?: string | null
 ) {
   let razorpayLink: string | undefined;
   if (customer.paymentMethod === "razorpay") {
     razorpayLink = await generateRazorpayLink({
-      amount: cartSubtotal(items),
+      amount: cartTotal(items, couponCode),
       customerName: customer.name,
       customerPhone: customer.phone,
     });
   }
-  const url = whatsappCheckoutUrl(items, customer, whatsappNumber, razorpayLink);
+  const url = whatsappCheckoutUrl(
+    items,
+    customer,
+    whatsappNumber,
+    razorpayLink,
+    couponCode
+  );
   window.open(url, "_blank");
 }

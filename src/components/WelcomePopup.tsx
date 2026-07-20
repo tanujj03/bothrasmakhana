@@ -1,85 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import Logo from "./Logo";
+import ConfettiBurst from "./ConfettiBurst";
 import { LAUNCH_OFFER_TEXT, PRICING, DEFAULT_SIZE } from "@/lib/constants";
 import { useUIStore } from "@/lib/uiStore";
 
 const SHOW_DELAY = 1800;
-
-interface Particle {
-  id: number;
-  left: number;
-  dx: number;
-  dy: number;
-  rotate: number;
-  size: number;
-  delay: number;
-  duration: number;
-}
-
-const PARTICLE_COUNT = 32;
-
-function generateParticles(): Particle[] {
-  const particles: Particle[] = [];
-  for (let i = 0; i < PARTICLE_COUNT; i++) {
-    const fromLeft = i % 2 === 0;
-    particles.push({
-      id: i,
-      left: fromLeft ? 2 + Math.random() * 14 : 84 + Math.random() * 14,
-      dx: (fromLeft ? -1 : 1) * (50 + Math.random() * 90),
-      dy: -(60 + Math.random() * 140),
-      rotate: (Math.random() - 0.5) * 200,
-      size: 4 + Math.random() * 4,
-      delay: Math.random() * 0.25,
-      duration: 0.9 + Math.random() * 0.6,
-    });
-  }
-  return particles;
-}
-
-function ConfettiBurst() {
-  const particles = useMemo(() => generateParticles(), []);
-  // Mounting these a beat after the backdrop/popup box's own entrance
-  // (instead of in the same commit) spreads the DOM-creation + animation
-  // start-up cost across two frames rather than dumping it all into one —
-  // that first frame was otherwise doing backdrop fade-in, popup scale-in,
-  // and creating every particle's animated element all at once.
-  const [ready, setReady] = useState(false);
-  useEffect(() => {
-    const timer = setTimeout(() => setReady(true), 120);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!ready) return null;
-
-  return (
-    // z-20 lifts this above the dialog box below (a sibling with no z-index
-    // of its own) — without it, being first in DOM order meant the dialog's
-    // opaque background painted over the burst instead of it reading as a
-    // party-popper effect in front of the popup.
-    <div className="pointer-events-none absolute inset-0 z-20" aria-hidden="true">
-      {particles.map((p) => (
-        <motion.span
-          key={p.id}
-          className="absolute rounded-full bg-accent-gold"
-          style={{ left: `${p.left}%`, bottom: 10, width: p.size, height: p.size }}
-          initial={{ opacity: 0, x: 0, y: 0, rotate: 0, scale: 0.5 }}
-          animate={{
-            opacity: [0, 1, 0],
-            x: p.dx,
-            y: p.dy,
-            rotate: p.rotate,
-            scale: 1,
-          }}
-          transition={{ duration: p.duration, delay: p.delay, ease: "easeOut" }}
-        />
-      ))}
-    </div>
-  );
-}
 
 export default function WelcomePopup() {
   const [show, setShow] = useState(false);

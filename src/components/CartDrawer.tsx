@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { useCartStore, cartSubtotal } from "@/lib/store";
+import { useCartStore, cartSubtotal, cartDiscount } from "@/lib/store";
 import SizeSelector from "./SizeSelector";
 import CheckoutForm from "./CheckoutForm";
+import ConfettiBurst from "./ConfettiBurst";
+
+const CONFETTI_DURATION_MS = 1600;
 
 export default function CartDrawer() {
   const isOpen = useCartStore((s) => s.isOpen);
@@ -16,9 +19,52 @@ export default function CartDrawer() {
   const removeItem = useCartStore((s) => s.removeItem);
   const changeItemSize = useCartStore((s) => s.changeItemSize);
   const clearCart = useCartStore((s) => s.clearCart);
+  const couponCode = useCartStore((s) => s.couponCode);
+  const applyCoupon = useCartStore((s) => s.applyCoupon);
+  const clearCoupon = useCartStore((s) => s.clearCoupon);
 
   const [step, setStep] = useState<"cart" | "checkout">("cart");
+  const [couponInput, setCouponInput] = useState("");
+  const [couponError, setCouponError] = useState<string | null>(null);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [confettiKey, setConfettiKey] = useState(0);
+  const confettiTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const subtotal = cartSubtotal(items);
+  const discount = cartDiscount(items, couponCode);
+  const total = subtotal - discount;
+
+  useEffect(() => {
+    return () => {
+      if (confettiTimeoutRef.current) clearTimeout(confettiTimeoutRef.current);
+    };
+  }, []);
+
+  const handleApplyCoupon = () => {
+    if (!couponInput.trim()) {
+      setCouponError("Enter a coupon code");
+      return;
+    }
+    const success = applyCoupon(couponInput);
+    if (success) {
+      setCouponError(null);
+      setCouponInput("");
+      setConfettiKey((k) => k + 1);
+      setShowConfetti(true);
+      if (confettiTimeoutRef.current) clearTimeout(confettiTimeoutRef.current);
+      confettiTimeoutRef.current = setTimeout(
+        () => setShowConfetti(false),
+        CONFETTI_DURATION_MS
+      );
+    } else {
+      setCouponError("Invalid coupon code");
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    clearCoupon();
+    setCouponError(null);
+    setCouponInput("");
+  };
 
   // Pause the site's ambient background animations (hero floaters/particles,
   // card glows, cursor idle-spin, kenburns zoom) while the drawer covers
@@ -153,12 +199,90 @@ export default function CartDrawer() {
                 </div>
 
                 {items.length > 0 && (
-                  <div className="border-t border-black/10 px-6 py-5">
-                    <div className="mb-3 flex items-center justify-between">
+                  <div className="border-t border-black/10 px-6 pb-5 pt-5">
+                    <div className="mb-5">
+                      {couponCode ? (
+                        <div className="relative flex items-center justify-between gap-3 overflow-hidden rounded-xl border border-accent-gold/50 bg-gradient-to-r from-accent-gold/15 via-accent-gold/5 to-transparent px-4 py-3">
+                          {showConfetti && (
+                            <ConfettiBurst key={confettiKey} count={48} compact />
+                          )}
+                          <div className="flex items-center gap-2.5">
+                            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-gold text-bg-base">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+                                <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+                              </svg>
+                            </span>
+                            <span className="font-body text-xs font-semibold text-text-primary">
+                              Coupon Applied
+                            </span>
+                          </div>
+                          <button
+                            onClick={handleRemoveCoupon}
+                            className="shrink-0 font-body text-[11px] font-medium text-text-primary/45 underline-offset-2 transition-colors duration-200 ease-in-out hover:text-flavor-periperi hover:underline"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ) : (
+                        <div>
+                          <div className="flex gap-2">
+                            <input
+                              value={couponInput}
+                              onChange={(e) => {
+                                setCouponInput(e.target.value);
+                                setCouponError(null);
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  e.preventDefault();
+                                  handleApplyCoupon();
+                                }
+                              }}
+                              placeholder="Enter coupon code"
+                              aria-label="Coupon code"
+                              className="min-w-0 flex-1 rounded-lg border border-black/10 bg-bg-base px-3.5 py-2.5 text-sm outline-none transition-all duration-200 focus:border-accent-gold focus:shadow-[0_0_0_3px_rgba(184,137,46,0.18)]"
+                            />
+                            <button
+                              onClick={handleApplyCoupon}
+                              className="shrink-0 rounded-lg bg-text-primary px-4 py-2.5 font-body text-xs font-semibold uppercase tracking-wider text-accent-gold transition-colors duration-200 ease-in-out hover:bg-text-primary-hover"
+                            >
+                              Apply
+                            </button>
+                          </div>
+                          {couponError && (
+                            <p className="mt-2 flex items-center gap-1.5 font-body text-[11px] font-medium text-flavor-periperi/80">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                                <circle cx="12" cy="12" r="9" />
+                                <path d="M12 8v5M12 16h.01" strokeLinecap="round" />
+                              </svg>
+                              {couponError}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mb-1.5 flex items-center justify-between">
                       <span className="font-body text-sm font-medium text-text-primary/70">
                         Subtotal
                       </span>
-                      <span className="font-display text-lg font-semibold">₹{subtotal}</span>
+                      <span className="font-body text-sm">₹{subtotal}</span>
+                    </div>
+                    {couponCode && (
+                      <div className="mb-1.5 flex items-center justify-between">
+                        <span className="font-body text-sm font-medium text-accent-gold-strong">
+                          Coupon Discount
+                        </span>
+                        <span className="font-body text-sm font-semibold text-accent-gold-strong">
+                          -₹{discount}
+                        </span>
+                      </div>
+                    )}
+                    <div className="mb-4 flex items-center justify-between border-t border-black/10 pt-2.5">
+                      <span className="font-body text-sm font-medium text-text-primary/70">
+                        Total
+                      </span>
+                      <span className="font-display text-lg font-semibold">₹{total}</span>
                     </div>
                     <div className="mb-4 flex items-center gap-1.5 text-xs font-semibold text-accent-gold-strong">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">

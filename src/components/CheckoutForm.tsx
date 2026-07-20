@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { CartItem, CustomerDetails, PaymentMethod } from "@/lib/store";
-import { submitOrder } from "@/lib/store";
+import { submitOrder, useCartStore } from "@/lib/store";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 
 const PHONE_RE = /^\d{10}$/;
@@ -23,6 +23,7 @@ export default function CheckoutForm({
   const [pincode, setPincode] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cod");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const couponCode = useCartStore((s) => s.couponCode);
 
   const validate = () => {
     const next: Record<string, string> = {};
@@ -46,7 +47,7 @@ export default function CheckoutForm({
       paymentMethod,
     };
 
-    await submitOrder(items, customer, WHATSAPP_NUMBER);
+    await submitOrder(items, customer, WHATSAPP_NUMBER, couponCode);
     onSubmitted();
   };
 
