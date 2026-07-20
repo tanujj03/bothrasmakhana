@@ -8,7 +8,7 @@ import SizeSelector from "./SizeSelector";
 import CheckoutForm from "./CheckoutForm";
 import MakhanaRain from "./MakhanaRain";
 
-const COUPON_RAIN_DURATION_MS = 1800;
+const COUPON_RAIN_DURATION_MS = 2900;
 
 export default function CartDrawer() {
   const isOpen = useCartStore((s) => s.isOpen);
@@ -103,6 +103,14 @@ export default function CartDrawer() {
             role="dialog"
             aria-label="Shopping cart"
           >
+            {/* Direct child of the aside (itself `fixed`, so already a
+                containing block) rather than scoped to the coupon box —
+                covers the whole drawer so the rain falls from above the
+                header down past the footer. A sibling of the scrollable
+                item list below, not a descendant of it, so that list's
+                overflow-y-auto never clips it. */}
+            {showCouponRain && <MakhanaRain key={couponRainKey} count={180} />}
+
             <div className="flex items-center justify-between border-b border-black/10 px-6 py-5">
               <h2 className="font-display text-xl font-semibold">
                 {step === "cart" ? "Your Cart" : "Checkout"}
@@ -202,33 +210,23 @@ export default function CartDrawer() {
                   <div className="border-t border-black/10 px-6 pb-5 pt-5">
                     <div className="mb-5">
                       {couponCode ? (
-                        <div className="relative">
-                          {/* Sibling of the bordered box below, not a child of it —
-                              mirrors WelcomePopup's structure so the rain renders
-                              fully visible above/around the box instead of being
-                              clipped by it. Neither this wrapper nor any ancestor
-                              up to the drawer itself sets overflow, and the
-                              scrollable item list is a sibling (not a parent) of
-                              this footer section, so nothing clips the rain. */}
-                          {showCouponRain && <MakhanaRain key={couponRainKey} count={70} />}
-                          <div className="flex items-center justify-between gap-3 rounded-xl border border-accent-gold/50 bg-gradient-to-r from-accent-gold/15 via-accent-gold/5 to-transparent px-4 py-3">
-                            <div className="flex items-center gap-2.5">
-                              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-gold text-bg-base">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
-                                  <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
-                              </span>
-                              <span className="font-body text-xs font-semibold text-text-primary">
-                                Coupon Applied
-                              </span>
-                            </div>
-                            <button
-                              onClick={handleRemoveCoupon}
-                              className="shrink-0 font-body text-[11px] font-medium text-text-primary/45 underline-offset-2 transition-colors duration-200 ease-in-out hover:text-flavor-periperi hover:underline"
-                            >
-                              Remove
-                            </button>
+                        <div className="flex items-center justify-between gap-3 rounded-xl border border-accent-gold/50 bg-gradient-to-r from-accent-gold/15 via-accent-gold/5 to-transparent px-4 py-3">
+                          <div className="flex items-center gap-2.5">
+                            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-gold text-bg-base">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+                                <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+                              </svg>
+                            </span>
+                            <span className="font-body text-xs font-semibold text-text-primary">
+                              Coupon Applied
+                            </span>
                           </div>
+                          <button
+                            onClick={handleRemoveCoupon}
+                            className="shrink-0 font-body text-[11px] font-medium text-text-primary/45 underline-offset-2 transition-colors duration-200 ease-in-out hover:text-flavor-periperi hover:underline"
+                          >
+                            Remove
+                          </button>
                         </div>
                       ) : (
                         <div>
