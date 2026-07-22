@@ -15,9 +15,9 @@ export const SIZES: SizeKey[] = ["50g", "75g", "100g"];
 export const DEFAULT_SIZE: SizeKey = "50g";
 
 export const PRICING: Record<SizeKey, { mrp: number; offer: number }> = {
-  "50g": { mrp: 199, offer: 179 },
-  "75g": { mrp: 269, offer: 242 },
-  "100g": { mrp: 339, offer: 305 },
+  "50g": { mrp: 179, offer: 139 },
+  "75g": { mrp: 229, offer: 189 },
+  "100g": { mrp: 319, offer: 279 },
 };
 
 export const LAUNCH_OFFER_TEXT =
